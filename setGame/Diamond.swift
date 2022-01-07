@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct Diamond: Shape {
+    var card : Card
     
     func path(in rect: CGRect) -> Path {
         let top = CGPoint(x: rect.midX, y: rect.minY)
@@ -21,6 +22,7 @@ struct Diamond: Shape {
         p.addLine(to: bottom)
         p.addLine(to: right)
         p.addLine(to: top)
+        p.closeSubpath()
         return p
     }
     
