@@ -9,7 +9,7 @@ import SwiftUI
 
 enum CardGeometry {
     case diamond
-    case rectangle
+    case roundedRectangle
     case curv
 }
 
@@ -24,21 +24,22 @@ struct Card : Identifiable {
     var number : CardNumber
     var fill  : Int
     var color : Color
-    var shape = CardGeometry.diamond
+    var shape : CardGeometry
+    
 }
 
 struct ContentView: View {
-    var contents : Array<Card> = [Card(id: 0, number: CardNumber.one, fill:0, color: Color.red),
-                                  Card(id: 1, number: CardNumber.two, fill:0, color: Color.green),
-                                  Card(id: 2, number: CardNumber.three, fill:0, color: Color.purple),
-                                  Card(id: 3, number: CardNumber.one, fill:0, color: Color.red),
-                                  Card(id: 4, number: CardNumber.two, fill:0, color: Color.green),
-                                  Card(id: 5, number: CardNumber.three, fill:0, color: Color.purple)]
+    var cards : Array<Card> = [Card(id: 0, number: CardNumber.one, fill:0, color: Color.red, shape: .diamond),
+                               Card(id: 1, number: CardNumber.two, fill:0, color: Color.green, shape: .curv),
+                               Card(id: 2, number: CardNumber.three, fill:0, color: Color.purple, shape: .roundedRectangle),
+                               Card(id: 3, number: CardNumber.one, fill:0, color: Color.red, shape: .diamond),
+                               Card(id: 4, number: CardNumber.two, fill:0, color: Color.green, shape: .curv),
+                               Card(id: 5, number: CardNumber.three, fill:0, color: Color.purple, shape: .roundedRectangle)]
     
     var body: some View {
-        AspectVGrid(items: contents, aspectRatio: 55/87) { item in
+        AspectVGrid(items: cards, aspectRatio: 55/87) { item in
             CardView(card: item).padding(3)
-        }.foregroundColor(.red)
+        }
     }
 }
 
@@ -48,6 +49,8 @@ struct CardView: View {
     var card : Card
     var body : some View {
         let cardEdge = RoundedRectangle(cornerRadius: 5).stroke(lineWidth: 2).foregroundColor(.red)
+        
+
         
         GeometryReader { geometry in
             switch card.number {
@@ -59,9 +62,9 @@ struct CardView: View {
                         HStack {
                             Spacer(minLength: geometry.size.width * (7/55))
                             // foregroundColor not working???
-                            Diamond(card : card).foregroundColor(card.color)
+                            CardShape(card : card)
                             Spacer(minLength: geometry.size.width * (7/55))
-                        }
+                        }.foregroundColor(card.color)
                         Spacer(minLength: geometry.size.height * (35/87))
                     }
                 }
@@ -73,10 +76,10 @@ struct CardView: View {
                         HStack {
                             Spacer(minLength: geometry.size.width * (7/55))
                             VStack {
-                                Diamond(card : card).stroke(lineWidth: 4)
+                                CardShape(card : card).stroke(lineWidth: 4)
                                 Spacer(minLength: geometry.size.height * (5/85))
-                                Diamond(card : card).stroke(lineWidth: 4)
-                            }
+                                CardShape(card : card).stroke(lineWidth: 4)
+                            }.foregroundColor(card.color)
                             Spacer(minLength: geometry.size.width * (7/55))
                         }
                         Spacer(minLength: geometry.size.height * (21/87))
@@ -91,12 +94,12 @@ struct CardView: View {
                         HStack {
                             Spacer(minLength: geometry.size.width * (7/55))
                             VStack {
-                                Diamond(card : card).stroke(lineWidth: 4)
+                                CardShape(card : card).stroke(lineWidth: 4)
                                 Spacer(minLength: geometry.size.height * (5/85))
-                                Diamond(card : card).stroke(lineWidth: 4)
+                                CardShape(card : card).stroke(lineWidth: 4)
                                 Spacer(minLength: geometry.size.height * (5/85))
-                                Diamond(card : card).stroke(lineWidth: 4)
-                            }
+                                CardShape(card : card).stroke(lineWidth: 4)
+                            }.foregroundColor(card.color)
                             Spacer(minLength: geometry.size.width * (7/55))
                         }
                         Spacer(minLength: geometry.size.height * (10/87))
