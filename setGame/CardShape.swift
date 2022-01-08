@@ -55,12 +55,16 @@ struct CardShape: Shape {
 }
 
 
-
+// https://stackoverflow.com/questions/62040461/swiftui-mask-a-rectangle-inside-a-rounded-rectangle
 struct GridRectangle: Shape {
     
     func path(in rect: CGRect) -> Path {
         var p = Path()
         
+        for x in stride(from: rect.minX, to: rect.maxX, by: (1/30) * rect.width) {
+            p.move(to: CGPoint(x: x, y: rect.minY))
+            p.addLine(to: CGPoint(x: x, y: rect.maxY))
+        }
         return p
     }
 }
