@@ -19,22 +19,27 @@ enum CardNumber {
     case three
 }
 
+enum CardFillStyle {
+    case solid
+    case empty
+    case grid
+}
 struct Card : Identifiable {
     var id : Int
     var number : CardNumber
-    var fill  : Int
+    var fill  : CardFillStyle
     var color : Color
     var shape : CardGeometry
     
 }
 
 struct ContentView: View {
-    var cards : Array<Card> = [Card(id: 0, number: CardNumber.one, fill:0, color: Color.red, shape: .diamond),
-                               Card(id: 1, number: CardNumber.two, fill:0, color: Color.green, shape: .curv),
-                               Card(id: 2, number: CardNumber.three, fill:0, color: Color.purple, shape: .roundedRectangle),
-                               Card(id: 3, number: CardNumber.one, fill:0, color: Color.red, shape: .diamond),
-                               Card(id: 4, number: CardNumber.two, fill:0, color: Color.green, shape: .curv),
-                               Card(id: 5, number: CardNumber.three, fill:0, color: Color.purple, shape: .roundedRectangle)]
+    var cards : Array<Card> = [Card(id: 0, number: CardNumber.one, fill:.solid, color: Color.red, shape: .diamond),
+                               Card(id: 1, number: CardNumber.two, fill:.empty, color: Color.green, shape: .curv),
+                               Card(id: 2, number: CardNumber.three, fill:.grid, color: Color.purple, shape:.roundedRectangle),
+                               Card(id: 3, number: CardNumber.one, fill:.solid, color: Color.red, shape: .diamond),
+                               Card(id: 4, number: CardNumber.two, fill:.empty, color: Color.green, shape: .curv),
+                               Card(id: 5, number: CardNumber.three, fill:.grid, color: Color.purple, shape: .roundedRectangle)]
     
     var body: some View {
         AspectVGrid(items: cards, aspectRatio: 55/87) { item in
@@ -43,10 +48,25 @@ struct ContentView: View {
     }
 }
 
+// https://stackoverflow.com/questions/56786163/swiftui-how-to-draw-filled-and-stroked-shape
 
 
 struct CardView: View {
     var card : Card
+    
+    @ViewBuilder
+    func fillCard()  -> some View {
+        switch card.fill {
+        case .grid:
+            CardShape(card: card)
+        case .empty:
+            CardShape(card: card).stroke(lineWidth: 3)
+        case .solid:
+            CardShape(card: card).fill()
+        }
+
+    }
+    
     var body : some View {
         let cardEdge = RoundedRectangle(cornerRadius: 5).stroke(lineWidth: 2).foregroundColor(.red)
         
@@ -61,8 +81,7 @@ struct CardView: View {
                         Spacer(minLength: geometry.size.height * (34/85))
                         HStack {
                             Spacer(minLength: geometry.size.width * (7/55))
-                            // foregroundColor not working???
-                            CardShape(card : card)
+                            fillCard()
                             Spacer(minLength: geometry.size.width * (7/55))
                         }.foregroundColor(card.color)
                         Spacer(minLength: geometry.size.height * (35/87))
@@ -76,9 +95,9 @@ struct CardView: View {
                         HStack {
                             Spacer(minLength: geometry.size.width * (7/55))
                             VStack {
-                                CardShape(card : card).stroke(lineWidth: 4)
+                                fillCard()
                                 Spacer(minLength: geometry.size.height * (5/85))
-                                CardShape(card : card).stroke(lineWidth: 4)
+                                fillCard()
                             }.foregroundColor(card.color)
                             Spacer(minLength: geometry.size.width * (7/55))
                         }
@@ -94,11 +113,11 @@ struct CardView: View {
                         HStack {
                             Spacer(minLength: geometry.size.width * (7/55))
                             VStack {
-                                CardShape(card : card).stroke(lineWidth: 4)
+                                fillCard()
                                 Spacer(minLength: geometry.size.height * (5/85))
-                                CardShape(card : card).stroke(lineWidth: 4)
+                                fillCard()
                                 Spacer(minLength: geometry.size.height * (5/85))
-                                CardShape(card : card).stroke(lineWidth: 4)
+                                fillCard()
                             }.foregroundColor(card.color)
                             Spacer(minLength: geometry.size.width * (7/55))
                         }

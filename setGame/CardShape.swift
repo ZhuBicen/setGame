@@ -11,14 +11,16 @@ struct CardShape: Shape {
     var card : Card
     
     func path(in rect: CGRect) -> Path {
+        var p : Path
         switch card.shape {
         case .diamond:
-            return createDiamond(rect)
+            p = createDiamond(rect)
         case .curv:
-            return createCurv(rect)
+            p = createCurv(rect)
         case .roundedRectangle:
-            return createRoundedRectangle(rect)
+            p = createRoundedRectangle(rect)
         }
+        return p
     }
     
     func createDiamond(_ rect: CGRect) -> Path {
@@ -40,15 +42,25 @@ struct CardShape: Shape {
     func createCurv(_ rect: CGRect) -> Path {
         var p = Path()
         p.move(to: CGPoint(x: rect.minX, y: rect.minY))
-        p.move(to: CGPoint(x: rect.minX, y: rect.maxY))
-        p.move(to: CGPoint(x: rect.maxX, y: rect.maxY))
-        p.move(to: CGPoint(x: rect.maxX, y: rect.minY))
+        p.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+        p.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        p.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
         p.closeSubpath()
         return p
     }
     
     func createRoundedRectangle(_ rect: CGRect) -> Path {
-        return Path()
+        RoundedRectangle(cornerRadius: rect.height).path(in: rect)
     }
 }
 
+
+
+struct GridRectangle: Shape {
+    
+    func path(in rect: CGRect) -> Path {
+        var p = Path()
+        
+        return p
+    }
+}
