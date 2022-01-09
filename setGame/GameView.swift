@@ -7,45 +7,13 @@
 
 import SwiftUI
 
-enum CardGeometry {
-    case diamond
-    case roundedRectangle
-    case curv
-}
 
-enum CardNumber {
-    case one
-    case two
-    case three
-}
 
-enum CardFillStyle {
-    case solid
-    case empty
-    case grid
-}
-struct Card : Identifiable {
-    var id : Int
-    var number : CardNumber
-    var fill  : CardFillStyle
-    var color : Color
-    var shape : CardGeometry
-    
-}
-
-struct ContentView: View {
-    var cards : Array<Card> = [Card(id: 0, number: CardNumber.one, fill:.solid, color: Color.red, shape: .diamond),
-                               Card(id: 1, number: CardNumber.two, fill:.empty, color: Color.green, shape: .curv),
-                               Card(id: 2, number: CardNumber.three, fill:.grid, color: Color.purple, shape:.roundedRectangle),
-                               Card(id: 3, number: CardNumber.one, fill:.solid, color: Color.red, shape: .diamond),
-                               Card(id: 4, number: CardNumber.two, fill:.empty, color: Color.green, shape: .curv),
-                               Card(id: 5, number: CardNumber.three, fill:.grid, color: Color.purple, shape: .roundedRectangle),
-                               Card(id: 6, number: CardNumber.one, fill:.grid, color: Color.purple, shape: .diamond),
-                               Card(id: 7, number: CardNumber.two, fill:.grid, color: Color.purple, shape: .diamond),
-                               Card(id: 8, number: CardNumber.three, fill:.grid, color: Color.purple, shape: .diamond)]
+struct GameView: View {
+    @ObservedObject var gameViewModel: GameViewModel
     
     var body: some View {
-        AspectVGrid(items: cards, aspectRatio: 55/87) { item in
+        AspectVGrid(items: gameViewModel.cards, aspectRatio: 55/87) { item in
             CardView(card: item).padding(3)
         }
     }
@@ -55,7 +23,7 @@ struct ContentView: View {
 
 
 struct CardView: View {
-    var card : Card
+    var card : GameViewModel.Card
     
     @ViewBuilder
     func fillCard()  -> some View {
@@ -63,10 +31,10 @@ struct CardView: View {
         case .grid:
             ZStack {
                 GridRectangle().stroke(lineWidth: 1).clipShape(CardShape(card: card))
-                CardShape(card: card).stroke(lineWidth: 3)
+                CardShape(card: card).stroke(lineWidth: 2)
             }
         case .empty:
-            CardShape(card: card).stroke(lineWidth: 3)
+            CardShape(card: card).stroke(lineWidth: 2)
         case .solid:
             CardShape(card: card).fill()
         }
@@ -75,8 +43,6 @@ struct CardView: View {
     
     var body : some View {
         let cardEdge = RoundedRectangle(cornerRadius: 5).stroke(lineWidth: 2).foregroundColor(.red)
-        
-
         
         GeometryReader { geometry in
             switch card.number {
@@ -135,8 +101,9 @@ struct CardView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct GameView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        let game = GameViewModel()
+        GameView(gameViewModel: game)
     }
 }

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		346F322127871F2F00DB1EC2 /* setGameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F322027871F2F00DB1EC2 /* setGameApp.swift */; };
-		346F322327871F2F00DB1EC2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F322227871F2F00DB1EC2 /* ContentView.swift */; };
+		346F322327871F2F00DB1EC2 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F322227871F2F00DB1EC2 /* GameView.swift */; };
 		346F322527871F3000DB1EC2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 346F322427871F3000DB1EC2 /* Assets.xcassets */; };
 		346F322827871F3000DB1EC2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 346F322727871F3000DB1EC2 /* Preview Assets.xcassets */; };
 		346F323227871F3000DB1EC2 /* setGameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F323127871F3000DB1EC2 /* setGameTests.swift */; };
@@ -16,6 +16,8 @@
 		346F323E27871F3000DB1EC2 /* setGameUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F323D27871F3000DB1EC2 /* setGameUITestsLaunchTests.swift */; };
 		346F324B2787200C00DB1EC2 /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F324A2787200C00DB1EC2 /* AspectVGrid.swift */; };
 		346F324D2787257A00DB1EC2 /* CardShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F324C2787257A00DB1EC2 /* CardShape.swift */; };
+		346F3251278A865F00DB1EC2 /* GameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F3250278A865F00DB1EC2 /* GameModel.swift */; };
+		346F3253278A88BF00DB1EC2 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F3252278A88BF00DB1EC2 /* GameViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,7 +40,7 @@
 /* Begin PBXFileReference section */
 		346F321D27871F2F00DB1EC2 /* setGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = setGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		346F322027871F2F00DB1EC2 /* setGameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = setGameApp.swift; sourceTree = "<group>"; };
-		346F322227871F2F00DB1EC2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		346F322227871F2F00DB1EC2 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		346F322427871F3000DB1EC2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		346F322727871F3000DB1EC2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		346F322D27871F3000DB1EC2 /* setGameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = setGameTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -48,6 +50,8 @@
 		346F323D27871F3000DB1EC2 /* setGameUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = setGameUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		346F324A2787200C00DB1EC2 /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
 		346F324C2787257A00DB1EC2 /* CardShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardShape.swift; sourceTree = "<group>"; };
+		346F3250278A865F00DB1EC2 /* GameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModel.swift; sourceTree = "<group>"; };
+		346F3252278A88BF00DB1EC2 /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,9 +102,11 @@
 		346F321F27871F2F00DB1EC2 /* setGame */ = {
 			isa = PBXGroup;
 			children = (
+				346F3252278A88BF00DB1EC2 /* GameViewModel.swift */,
 				346F324C2787257A00DB1EC2 /* CardShape.swift */,
 				346F322027871F2F00DB1EC2 /* setGameApp.swift */,
-				346F322227871F2F00DB1EC2 /* ContentView.swift */,
+				346F3250278A865F00DB1EC2 /* GameModel.swift */,
+				346F322227871F2F00DB1EC2 /* GameView.swift */,
 				346F324A2787200C00DB1EC2 /* AspectVGrid.swift */,
 				346F322427871F3000DB1EC2 /* Assets.xcassets */,
 				346F322627871F3000DB1EC2 /* Preview Content */,
@@ -263,8 +269,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				346F3253278A88BF00DB1EC2 /* GameViewModel.swift in Sources */,
+				346F3251278A865F00DB1EC2 /* GameModel.swift in Sources */,
 				346F324D2787257A00DB1EC2 /* CardShape.swift in Sources */,
-				346F322327871F2F00DB1EC2 /* ContentView.swift in Sources */,
+				346F322327871F2F00DB1EC2 /* GameView.swift in Sources */,
 				346F322127871F2F00DB1EC2 /* setGameApp.swift in Sources */,
 				346F324B2787200C00DB1EC2 /* AspectVGrid.swift in Sources */,
 			);

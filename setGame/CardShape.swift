@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CardShape: Shape {
-    var card : Card
+    var card : GameViewModel.Card
     
     func path(in rect: CGRect) -> Path {
         var p : Path
