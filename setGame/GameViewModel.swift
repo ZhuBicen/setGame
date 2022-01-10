@@ -18,4 +18,8 @@ class GameViewModel: ObservableObject {
         Array(model.cards[0...11])
     }
     
+    func selectCard(card: Card) {
+        model.selectCard(card: card)
+    }
+    
 }

@@ -14,7 +14,9 @@ struct GameView: View {
     
     var body: some View {
         AspectVGrid(items: gameViewModel.cards, aspectRatio: 55/87) { item in
-            CardView(card: item).padding(3)
+            CardView(card: item).padding(3).onTapGesture {
+                gameViewModel.selectCard(card: item)
+            }
         }
     }
 }
@@ -27,22 +29,39 @@ struct CardView: View {
     
     @ViewBuilder
     func fillCard()  -> some View {
-        switch card.fill {
-        case .grid:
-            ZStack {
-                GridRectangle().stroke(lineWidth: 1).clipShape(CardShape(card: card))
+        ZStack{
+            switch card.fill {
+            case .grid:
+                ZStack {
+                    GridRectangle().stroke(lineWidth: 1).clipShape(CardShape(card: card))
+                    CardShape(card: card).stroke(lineWidth: 2)
+                }
+            case .empty:
                 CardShape(card: card).stroke(lineWidth: 2)
+            case .solid:
+                CardShape(card: card).fill()
             }
-        case .empty:
-            CardShape(card: card).stroke(lineWidth: 2)
-        case .solid:
-            CardShape(card: card).fill()
         }
 
     }
+
+    func getLineWidth(of card : GameViewModel.Card) -> CGFloat {
+        if card.isSelected {
+            return 4
+        }
+        return 2
+    }
+    
+    func getColor(of card : GameViewModel.Card) -> Color {
+        if card.isSelected {
+            return .red
+        }
+        return .blue
+    }
     
     var body : some View {
-        let cardEdge = RoundedRectangle(cornerRadius: 5).stroke(lineWidth: 2).foregroundColor(.red)
+
+        let cardEdge = RoundedRectangle(cornerRadius: 5).stroke(lineWidth: getLineWidth(of: card)).foregroundColor(getColor(of: card))
         
         GeometryReader { geometry in
             switch card.number {
