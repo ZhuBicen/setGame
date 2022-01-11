@@ -15,7 +15,7 @@ class GameViewModel: ObservableObject {
     @Published private(set) var model = GameModel()
 
     var cards: Array<Card> {
-        model.getShowingCards()
+        model.showingCards
     }
     
     func selectCard(card: Card) {

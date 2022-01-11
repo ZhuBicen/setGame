@@ -15,6 +15,7 @@ struct GameView: View {
     var body: some View {
         AspectVGrid(items: gameViewModel.cards, aspectRatio: 55/87) { item in
             CardView(card: item).padding(3).onTapGesture {
+                print("Selected card id: .\(item.id)")
                 gameViewModel.selectCard(card: item)
             }
         }

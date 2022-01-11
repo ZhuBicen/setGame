@@ -48,6 +48,7 @@ struct GameModel {
     }
     
     var cards : Array<Card> = []
+    var showingCards :Array<Card> = []
     
     
     
@@ -69,20 +70,10 @@ struct GameModel {
         }
         for index in 0...11 {
             cards[index].isShowing = true
+            showingCards.append(cards[index])
         }
     }
     
-    
-    
-    mutating func getShowingCards() -> [Card] {
-        print("getshowingcards")
-        let showingCards = cards.filter { card in
-            card.isShowing
-        }
-        print("showingCards2")
-        return showingCards
-        
-    }
     
     func getToBeShownCard() -> Card? {
         for (index, _) in cards.enumerated() {
@@ -94,7 +85,12 @@ struct GameModel {
     }
     
     mutating func selectCard(card: Card) {
-        cards[card.id].isSelected = true
+        for index in 0..<showingCards.count {
+            if showingCards[index].id == card.id {
+                showingCards[index].isSelected = true
+            }
+        }
+        // cards[card.id].isSelected = true
     }
     
     mutating func isSetCards(card1: Card, card2 : Card, card3 : Card) -> Bool {
