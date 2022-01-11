@@ -15,11 +15,10 @@ class GameViewModel: ObservableObject {
     @Published private(set) var model = GameModel()
 
     var cards: Array<Card> {
-        Array(model.cards[0...11])
+        model.getShowingCards()
     }
     
     func selectCard(card: Card) {
         model.selectCard(card: card)
     }
-    
 }
