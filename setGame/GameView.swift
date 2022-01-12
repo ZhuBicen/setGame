@@ -14,14 +14,14 @@ struct GameView: View {
     
     var body: some View {
         AspectVGrid(items: gameViewModel.cards, aspectRatio: 55/87) { item in
-            CardView(card: item).padding(3).onTapGesture {
-                print("Selected card id: .\(item.id)")
+            CardView(card: item).padding(3).contentShape(Rectangle()).onTapGesture {
                 gameViewModel.selectCard(card: item)
             }
         }
     }
 }
-
+// https://www.hackingwithswift.com/quick-start/swiftui/how-to-control-the-tappable-area-of-a-view-using-contentshape
+// https://stackoverflow.com/questions/63154815/why-doesnt-swiftui-ontapgesture-always-work
 // https://stackoverflow.com/questions/56786163/swiftui-how-to-draw-filled-and-stroked-shape
 
 

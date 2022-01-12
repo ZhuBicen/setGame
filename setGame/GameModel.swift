@@ -87,10 +87,10 @@ struct GameModel {
     mutating func selectCard(card: Card) {
         for index in 0..<showingCards.count {
             if showingCards[index].id == card.id {
-                showingCards[index].isSelected = true
+                showingCards[index].isSelected = !showingCards[index].isSelected
             }
         }
-        // cards[card.id].isSelected = true
+        cards[card.id].isSelected = !cards[card.id].isSelected
     }
     
     mutating func isSetCards(card1: Card, card2 : Card, card3 : Card) -> Bool {
