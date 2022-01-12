@@ -13,10 +13,42 @@ struct GameView: View {
     @ObservedObject var gameViewModel: GameViewModel
     
     var body: some View {
-        AspectVGrid(items: gameViewModel.cards, aspectRatio: 55/87) { item in
-            CardView(card: item).padding(3).contentShape(Rectangle()).onTapGesture {
-                gameViewModel.selectCard(card: item)
+        VStack {
+            AspectVGrid(items: gameViewModel.cards, aspectRatio: 55/87) { item in
+                CardView(card: item).padding(3).contentShape(Rectangle()).onTapGesture {
+                    gameViewModel.selectCard(card: item)
+                }
             }
+            if gameViewModel.isInSet {
+                Text("Matched")
+            }
+            HStack {
+                Spacer()
+                matchCards
+                Spacer()
+                newGame
+                Spacer()
+            }
+        }
+    }
+    var newGame : some View {
+        VStack {
+            Button(action: {
+            }, label:{
+               Image(systemName: "plus.circle.fill")
+        })
+            Text("New Game").font(.subheadline)
+        }
+    }
+    var matchCards : some View {
+
+        VStack {
+            Button(action: {
+                gameViewModel.checkSelectedCards()
+            }, label:{
+               Image(systemName: "s.circle.fill")
+        })
+            Text("Match Cards").font(.subheadline)
         }
     }
 }

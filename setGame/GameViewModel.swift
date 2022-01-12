@@ -18,7 +18,17 @@ class GameViewModel: ObservableObject {
         model.showingCards
     }
     
+    var isInSet : Bool {
+        model.isSelectedCardsInSet
+    }
+    
     func selectCard(card: Card) {
         model.selectCard(card: card)
     }
+    
+    func checkSelectedCards() {
+        model.checkSelectedCards()
+    }
+    
+    
 }
