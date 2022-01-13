@@ -35,7 +35,7 @@ struct GameModel {
 //        case purple = Color.purple
 //    }
     
-    struct Card : Identifiable {
+    class Card : Identifiable {
         var id : Int
         var number : CardNumber
         var fill  : CardFillStyle
@@ -44,6 +44,14 @@ struct GameModel {
         var isSelected: Bool = false
         var isInSet: Bool = false
         var isShowing: Bool = false
+        
+        init(_ id: Int, _ number : CardNumber, _ fillStyle : CardFillStyle, _ color : Color, _ shape : CardGeometry) {
+            self.id = id
+            self.number = number
+            self.fill = fillStyle
+            self.color = color
+            self.shape = shape
+        }
         
     }
     
@@ -58,7 +66,7 @@ struct GameModel {
             for fill in CardFillStyle.allCases {
                 for color in [Color.red, Color.green, Color.purple] {
                     for shape in CardGeometry.allCases {
-                        cards.append(Card(id: i, number: number, fill: fill, color: color, shape: shape))
+                        cards.append(Card(i, number, fill, color, shape))
                         i += 1
                     }
                 }
@@ -85,11 +93,6 @@ struct GameModel {
     }
     
     mutating func selectCard(card: Card) {
-        for index in 0..<showingCards.count {
-            if showingCards[index].id == card.id {
-                showingCards[index].isSelected = !showingCards[index].isSelected
-            }
-        }
         cards[card.id].isSelected = !cards[card.id].isSelected
     }
     
