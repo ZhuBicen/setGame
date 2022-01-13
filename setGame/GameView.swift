@@ -34,6 +34,7 @@ struct GameView: View {
     var newGame : some View {
         VStack {
             Button(action: {
+                gameViewModel.newGame()
             }, label:{
                Image(systemName: "plus.circle.fill")
         })
@@ -86,6 +87,9 @@ struct CardView: View {
     }
     
     func getColor(of card : GameViewModel.Card) -> Color {
+        if card.isInSet {
+            return .indigo
+        }
         if card.isSelected {
             return .red
         }

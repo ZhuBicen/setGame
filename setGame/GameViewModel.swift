@@ -30,5 +30,9 @@ class GameViewModel: ObservableObject {
         model.checkSelectedCards()
     }
     
+    func newGame() {
+        model = GameModel()
+    }
+    
     
 }
