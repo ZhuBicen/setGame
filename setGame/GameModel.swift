@@ -91,8 +91,14 @@ struct GameModel {
             }
         }
         cards[card.id].isSelected = !cards[card.id].isSelected
+        checkSelectedCards()
     }
     
+    mutating func updateShowingCards() {
+        for(index, card) in showingCards.enumerated() {
+            showingCards[index] = cards[card.id]
+        }
+    }
     mutating func checkSelectedCards() {
         let selectedCards = cards.filter { card in
             card.isSelected
@@ -113,6 +119,7 @@ struct GameModel {
         cards[card1.id].isInSet = true
         cards[card2.id].isInSet = true
         cards[card3.id].isInSet = true
+        updateShowingCards()
     }
 }
 

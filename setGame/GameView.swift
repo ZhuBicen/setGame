@@ -88,7 +88,7 @@ struct CardView: View {
     
     func getColor(of card : GameViewModel.Card) -> Color {
         if card.isInSet {
-            return .indigo
+            return .orange
         }
         if card.isSelected {
             return .red
@@ -96,15 +96,23 @@ struct CardView: View {
         return .blue
     }
     
+    @ViewBuilder
+    func buildCardBackground(of card : GameViewModel.Card) -> some View {
+        if card.isInSet {
+            RoundedRectangle(cornerRadius: 5).fill().foregroundColor(.green).opacity(0.3)
+        } else {
+            RoundedRectangle(cornerRadius: 5).stroke(lineWidth: getLineWidth(of: card)).foregroundColor(getColor(of: card)).opacity(0.3)
+        }
+    }
+    
     var body : some View {
 
-        let cardEdge = RoundedRectangle(cornerRadius: 5).stroke(lineWidth: getLineWidth(of: card)).foregroundColor(getColor(of: card))
-        
+        let cardBackground = buildCardBackground(of: card)
         GeometryReader { geometry in
             switch card.number {
             case .one:
                 ZStack {
-                    cardEdge
+                    cardBackground
                     VStack {
                         Spacer(minLength: geometry.size.height * (34/85))
                         HStack {
@@ -117,7 +125,7 @@ struct CardView: View {
                 }
             case .two:
                 ZStack {
-                    cardEdge
+                    cardBackground
                     VStack {
                         Spacer(minLength: geometry.size.height * (21/85))
                         HStack {
@@ -135,7 +143,7 @@ struct CardView: View {
                 
             case .three:
                 ZStack {
-                    cardEdge
+                    cardBackground
                     VStack {
                         Spacer(minLength: geometry.size.height * (10/85))
                         HStack {
