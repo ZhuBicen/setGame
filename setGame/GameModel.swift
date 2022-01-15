@@ -85,6 +85,10 @@ struct GameModel {
     }
     
     mutating func selectCard(card: Card) {
+        let selectedCards = showingCards.filter{ $0.isSelected }
+        if selectedCards.count >= 3 {
+            return
+        }
         for index in 0..<showingCards.count {
             if showingCards[index].id == card.id {
                 showingCards[index].isSelected = !showingCards[index].isSelected
@@ -100,9 +104,7 @@ struct GameModel {
         }
     }
     mutating func checkSelectedCards() {
-        let selectedCards = cards.filter { card in
-            card.isSelected
-        }
+        let selectedCards = cards.filter { $0.isSelected }
         if selectedCards.count != 3 {
             isSelectedCardsInSet = false
             return
@@ -116,9 +118,10 @@ struct GameModel {
         let fills: Set<CardFillStyle> = [card1.fill, card2.fill, card3.fill]
         let geometries: Set<CardGeometry> = [card1.shape, card2.shape, card3.shape]
         isSelectedCardsInSet = (colors.count == 1 || colors.count == 3) && (numbers.count == 1 || numbers.count == 3) && (fills.count == 1 || fills.count == 3) && (geometries.count == 1 || geometries.count == 3)
-        cards[card1.id].isInSet = true
-        cards[card2.id].isInSet = true
-        cards[card3.id].isInSet = true
+        
+        cards[card1.id].isInSet = isSelectedCardsInSet
+        cards[card2.id].isInSet = isSelectedCardsInSet
+        cards[card3.id].isInSet = isSelectedCardsInSet
         updateShowingCards()
     }
 }
