@@ -103,6 +103,11 @@ struct GameModel {
             showingCards[index] = cards[card.id]
         }
     }
+    
+    func isAllSameOrAllDifferent<T>(_ featureSet : Set<T>) -> Bool {
+        return featureSet.count == 1 || featureSet.count == 3
+    }
+    
     mutating func checkSelectedCards() {
         let selectedCards = cards.filter { $0.isSelected }
         if selectedCards.count != 3 {
@@ -117,8 +122,11 @@ struct GameModel {
         let numbers : Set<CardNumber> = [card1.number, card2.number, card3.number]
         let fills: Set<CardFillStyle> = [card1.fill, card2.fill, card3.fill]
         let geometries: Set<CardGeometry> = [card1.shape, card2.shape, card3.shape]
-        isSelectedCardsInSet = (colors.count == 1 || colors.count == 3) && (numbers.count == 1 || numbers.count == 3) && (fills.count == 1 || fills.count == 3) && (geometries.count == 1 || geometries.count == 3)
-        
+        let isSelectedCardsInSet = isAllSameOrAllDifferent(colors) &&
+            isAllSameOrAllDifferent(numbers) &&
+            isAllSameOrAllDifferent(fills) &&
+            isAllSameOrAllDifferent(geometries)
+
         cards[card1.id].isInSet = isSelectedCardsInSet
         cards[card2.id].isInSet = isSelectedCardsInSet
         cards[card3.id].isInSet = isSelectedCardsInSet
