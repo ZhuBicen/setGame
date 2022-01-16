@@ -45,7 +45,7 @@ struct GameView: View {
 
         VStack {
             Button(action: {
-                gameViewModel.checkSelectedCards()
+                print(gameViewModel.findMatchingCards())
             }, label:{
                Image(systemName: "s.circle.fill")
         })

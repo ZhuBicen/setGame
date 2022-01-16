@@ -26,8 +26,8 @@ class GameViewModel: ObservableObject {
         model.selectCard(card: card)
     }
     
-    func checkSelectedCards() {
-        model.checkSelectedCards()
+    func findMatchingCards() -> [Int] {
+        model.findMatchingCards()
     }
     
     func newGame() {
