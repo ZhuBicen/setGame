@@ -59,8 +59,10 @@ struct CardShape: Shape {
 struct GridRectangle: Shape {
     
     func path(in rect: CGRect) -> Path {
+        if rect.isEmpty { // Don't know why
+            return Path()
+        }
         var p = Path()
-        
         for x in stride(from: rect.minX, to: rect.maxX, by: (1/30) * rect.width) {
             p.move(to: CGPoint(x: x, y: rect.minY))
             p.addLine(to: CGPoint(x: x, y: rect.maxY))

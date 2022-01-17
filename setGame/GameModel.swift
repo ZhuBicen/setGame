@@ -90,12 +90,12 @@ struct GameModel {
     }
     
     fileprivate mutating func replaceMatchedCards() {
-        let showingCards = getShowingCards()
-        for (index, card) in showingCards.enumerated() {
+        for card in getShowingCards() {
             if card.isInSet {
-                cards[showingCards[index].id].isShowing = false
-                let card = getToBeShownCard()!
-                cards[card.id].isShowing = true
+                cards[card.id].isShowing = false
+                cards[card.id].isSelected = false
+                let newCard = getToBeShownCard()!
+                cards[newCard.id].isShowing = true
             }
         }
     }
