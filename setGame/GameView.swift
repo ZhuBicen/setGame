@@ -14,7 +14,7 @@ struct GameView: View {
     
     var body: some View {
         VStack {
-            AspectVGrid(items: gameViewModel.cards, aspectRatio: 55/87) { item in
+            AspectVGrid(items: gameViewModel.getShowingCards(), aspectRatio: 55/87) { item in
                 CardView(card: item).padding(3).contentShape(Rectangle()).onTapGesture {
                     gameViewModel.selectCard(card: item)
                 }
@@ -57,7 +57,9 @@ struct GameView: View {
 // https://stackoverflow.com/questions/63154815/why-doesnt-swiftui-ontapgesture-always-work
 // https://stackoverflow.com/questions/56786163/swiftui-how-to-draw-filled-and-stroked-shape
 
+// https://zhuanlan.zhihu.com/p/147475930
 
+// https://stackoverflow.com/questions/43815549/ios-how-to-pass-a-model-from-view-model-to-view-model-using-mvvm/43820233
 struct CardView: View {
     var card : GameViewModel.Card
     

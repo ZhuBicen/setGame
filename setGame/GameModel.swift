@@ -45,10 +45,16 @@ struct GameModel {
         var isInSet: Bool = false
         var isShowing: Bool = false
         
+        init(_ id: Int, _ number : CardNumber, _ fillStyle : CardFillStyle, _ color : Color, _ shape : CardGeometry) {
+            self.id = id
+            self.number = number
+            self.fill = fillStyle
+            self.color = color
+            self.shape = shape
+        }
     }
     
     var cards : Array<Card> = []
-    var showingCards :Array<Card> = []
     var isSelectedCardsInSet = false
     
     
@@ -58,7 +64,7 @@ struct GameModel {
             for fill in CardFillStyle.allCases {
                 for color in [Color.red, Color.green, Color.purple] {
                     for shape in CardGeometry.allCases {
-                        cards.append(Card(id: i, number: number, fill: fill, color: color, shape: shape))
+                        cards.append(Card(i, number, fill, color, shape))
                         i += 1
                     }
                 }
@@ -70,7 +76,6 @@ struct GameModel {
         }
         for index in 0...11 {
             cards[index].isShowing = true
-            showingCards.append(cards[index])
         }
     }
     
@@ -85,11 +90,12 @@ struct GameModel {
     }
     
     fileprivate mutating func replaceMatchedCards() {
+        let showingCards = getShowingCards()
         for (index, card) in showingCards.enumerated() {
             if card.isInSet {
                 cards[showingCards[index].id].isShowing = false
-                showingCards[index] = getToBeShownCard()!
-                cards[showingCards[index].id].isShowing = true
+                let card = getToBeShownCard()!
+                cards[card.id].isShowing = true
             }
         }
     }
@@ -101,24 +107,22 @@ struct GameModel {
             return
         }
 
-        let selectedCards = showingCards.filter{ $0.isSelected }
+        let selectedCards = cards.filter{ $0.isSelected }
         if selectedCards.count >= 3 {
             return
         }
-        for index in 0..<showingCards.count {
-            if showingCards[index].id == card.id {
-                showingCards[index].isSelected = !showingCards[index].isSelected
-                break
-            }
-        }
+        print("Touch card id:", card.id)
         cards[card.id].isSelected = !cards[card.id].isSelected
         checkSelectedCards()
     }
     
-    mutating func updateShowingCards() {
-        for(index, card) in showingCards.enumerated() {
-            showingCards[index] = cards[card.id]
+    func getShowingCards() -> Array<Card>{
+        let showingCards = cards.filter{ $0.isShowing }
+        for card in showingCards {
+            print("Showing card:", card.id, card.isSelected)
         }
+        print("=============")
+        return showingCards
     }
     
     func isAllSameOrAllDifferent<T>(_ featureSet : Set<T>) -> Bool {
@@ -126,6 +130,7 @@ struct GameModel {
     }
     
     func findMatchingCards() -> [Int] {
+        let showingCards = getShowingCards()
         for i in 0..<showingCards.count {
             for j in i+1..<showingCards.count {
                 for k in j+1..<showingCards.count {
@@ -163,7 +168,6 @@ struct GameModel {
         cards[card1.id].isInSet = isSelectedCardsInSet
         cards[card2.id].isInSet = isSelectedCardsInSet
         cards[card3.id].isInSet = isSelectedCardsInSet
-        updateShowingCards()
     }
 }
 
