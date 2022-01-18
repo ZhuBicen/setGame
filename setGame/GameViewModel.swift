@@ -17,22 +17,19 @@ class GameViewModel: ObservableObject {
     func getShowingCards() -> Array<Card> {
         model.getShowingCards()
     }
-//    var cards: Array<Card> {
-//        model.getShowingCards()
-//    }
     
     var isInSet : Bool {
         model.isSelectedCardsInSet
     }
-    
+        
     func selectCard(card: Card) {
         model.selectCard(card: card)
         objectWillChange.send()
 
     }
     
-    func findMatchingCards() -> [Int] {
-        model.findMatchingCards()
+    func hint() -> String {
+        model.findMatchingCards().description
     }
     
     func newGame() {

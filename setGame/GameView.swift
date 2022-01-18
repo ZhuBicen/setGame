@@ -11,6 +11,7 @@ import SwiftUI
 
 struct GameView: View {
     @ObservedObject var gameViewModel: GameViewModel
+    @State var hint : String = ""
     
     var body: some View {
         VStack {
@@ -19,8 +20,8 @@ struct GameView: View {
                     gameViewModel.selectCard(card: item)
                 }
             }
-            if gameViewModel.isInSet {
-                Text("Matched")
+            HStack {
+                Text(hint)
             }
             HStack {
                 Spacer()
@@ -29,12 +30,14 @@ struct GameView: View {
                 newGame
                 Spacer()
             }
+
         }
     }
     var newGame : some View {
         VStack {
             Button(action: {
                 gameViewModel.newGame()
+                hint = ""
             }, label:{
                Image(systemName: "plus.circle.fill")
         })
@@ -45,7 +48,7 @@ struct GameView: View {
 
         VStack {
             Button(action: {
-                print(gameViewModel.findMatchingCards())
+                hint = gameViewModel.hint()
             }, label:{
                Image(systemName: "s.circle.fill")
         })

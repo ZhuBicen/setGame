@@ -43,7 +43,6 @@ struct GameModel {
         var shape : CardGeometry
         var isSelected: Bool = false
         var isInSet: Bool = false
-        var isShowing: Bool = false
         
         init(_ id: Int, _ number : CardNumber, _ fillStyle : CardFillStyle, _ color : Color, _ shape : CardGeometry) {
             self.id = id
@@ -56,6 +55,7 @@ struct GameModel {
     
     var cards : Array<Card> = []
     var isSelectedCardsInSet = false
+    var showingCardsIds : [Int] = []
     
     
     init() {
@@ -75,14 +75,17 @@ struct GameModel {
             cards[index].id = index
         }
         for index in 0...11 {
-            cards[index].isShowing = true
+            showingCardsIds.append(index)
         }
     }
     
+    func isCardShowing(_ card : Card) -> Bool {
+        self.showingCardsIds.contains(card.id)
+    }
     
     func getToBeShownCard() -> Card? {
         for (index, _) in cards.enumerated() {
-            if !cards[index].isShowing && !cards[index].isInSet {
+            if !isCardShowing(cards[index]) && !cards[index].isInSet {
                 return cards[index]
             }
         }
@@ -90,12 +93,12 @@ struct GameModel {
     }
     
     fileprivate mutating func replaceMatchedCards() {
-        for card in getShowingCards() {
+        for (cardIdIndex, cardId) in showingCardsIds.enumerated() {
+            let card = cards[cardId]
             if card.isInSet {
-                cards[card.id].isShowing = false
-                cards[card.id].isSelected = false
-                let newCard = getToBeShownCard()!
-                cards[newCard.id].isShowing = true
+                cards[cardId].isSelected = false
+                let card = getToBeShownCard()!
+                showingCardsIds[cardIdIndex] = card.id
             }
         }
     }
@@ -117,7 +120,10 @@ struct GameModel {
     }
     
     func getShowingCards() -> Array<Card>{
-        let showingCards = cards.filter{ $0.isShowing }
+        var showingCards : [Card] = []
+        for cardId in showingCardsIds {
+            showingCards.append(cards[cardId])
+        }
         for card in showingCards {
             print("Showing card:", card.id, card.isSelected)
         }
