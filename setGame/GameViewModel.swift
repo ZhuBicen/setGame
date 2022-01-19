@@ -18,6 +18,11 @@ class GameViewModel: ObservableObject {
         model.getShowingCards()
     }
     
+    func showMoreCards() {
+        model.showMoreCards()
+        objectWillChange.send()
+    }
+    
     var isInSet : Bool {
         model.isSelectedCardsInSet
     }
@@ -25,7 +30,6 @@ class GameViewModel: ObservableObject {
     func selectCard(card: Card) {
         model.selectCard(card: card)
         objectWillChange.send()
-
     }
     
     func hint() -> String {

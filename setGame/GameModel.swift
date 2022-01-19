@@ -78,8 +78,15 @@ struct GameModel {
             showingCardsIds.append(index)
         }
     }
-    
-    func isCardShowing(_ card : Card) -> Bool {
+    mutating func showMoreCards() {
+        for _ in 0...2 {
+            let card = getToBeShownCard()
+            if card != nil {
+                showingCardsIds.append(card!.id)
+            }
+        }
+    }
+    fileprivate func isCardShowing(_ card : Card) -> Bool {
         self.showingCardsIds.contains(card.id)
     }
     
@@ -112,7 +119,9 @@ struct GameModel {
 
         let selectedCards = cards.filter{ $0.isSelected }
         if selectedCards.count >= 3 {
-            return
+            for card in selectedCards {
+                cards[card.id].isSelected = false
+            }
         }
         print("Touch card id:", card.id)
         cards[card.id].isSelected = !cards[card.id].isSelected

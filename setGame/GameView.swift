@@ -24,6 +24,7 @@ struct GameView: View {
                 Text(hint)
             }
             HStack {
+                deal3MoreCards
                 Spacer()
                 matchCards
                 Spacer()
@@ -31,6 +32,16 @@ struct GameView: View {
                 Spacer()
             }
 
+        }
+    }
+    var deal3MoreCards : some View {
+        VStack {
+            Button(action: {
+                gameViewModel.showMoreCards()
+            }, label:{
+               Image(systemName: "plus.circle.fill")
+        })
+            Text("Deal 3 more cards").font(.subheadline)
         }
     }
     var newGame : some View {
