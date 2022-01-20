@@ -42,7 +42,6 @@ struct GameModel {
         var color : Color
         var shape : CardGeometry
         var isSelected: Bool = false
-        var isInSet: Bool = false
         
         init(_ id: Int, _ number : CardNumber, _ fillStyle : CardFillStyle, _ color : Color, _ shape : CardGeometry) {
             self.id = id
@@ -54,8 +53,8 @@ struct GameModel {
     }
     
     var cards : Array<Card> = []
-    var isSelectedCardsInSet = false
     var showingCardsIds : [Int] = []
+    var matchedCardIs : [Int] = []
     
     
     init() {
@@ -90,42 +89,26 @@ struct GameModel {
         self.showingCardsIds.contains(card.id)
     }
     
+    fileprivate func isCardMatched(_ card : Card) -> Bool {
+        self.matchedCardIs.contains(card.id)
+    }
+    
     func getToBeShownCard() -> Card? {
-        for (index, _) in cards.enumerated() {
-            if !isCardShowing(cards[index]) && !cards[index].isInSet {
-                return cards[index]
+        for  card in cards {
+            if !isCardShowing(card) && !isCardMatched(card) {
+                return card
             }
         }
         return nil
     }
     
-    fileprivate mutating func replaceMatchedCards() {
-        for (cardIdIndex, cardId) in showingCardsIds.enumerated() {
-            let card = cards[cardId]
-            if card.isInSet {
-                cards[cardId].isSelected = false
-                let card = getToBeShownCard()!
-                showingCardsIds[cardIdIndex] = card.id
-            }
-        }
+    fileprivate mutating func dealThreeMoreCards() -> [Card?] {
+        [getToBeShownCard(), getToBeShownCard(), getToBeShownCard()]
     }
-    
-    mutating func selectCard(card: Card) {
-        if isSelectedCardsInSet {
-            isSelectedCardsInSet = false
-            replaceMatchedCards()
-            return
-        }
 
-        let selectedCards = cards.filter{ $0.isSelected }
-        if selectedCards.count >= 3 {
-            for card in selectedCards {
-                cards[card.id].isSelected = false
-            }
-        }
-        print("Touch card id:", card.id)
-        cards[card.id].isSelected = !cards[card.id].isSelected
-        checkSelectedCards()
+    
+    mutating func addMatchedCard(_ cardIds : [Int]) {
+        matchedCardIs += cardIds
     }
     
     func getShowingCards() -> Array<Card>{
@@ -133,10 +116,9 @@ struct GameModel {
         for cardId in showingCardsIds {
             showingCards.append(cards[cardId])
         }
-        for card in showingCards {
-            print("Showing card:", card.id, card.isSelected)
+        for (index, card) in showingCards.enumerated() {
+            print("Showing card:[", index, "]", card.id, card.isSelected)
         }
-        print("=============")
         return showingCards
     }
     
@@ -149,7 +131,7 @@ struct GameModel {
         for i in 0..<showingCards.count {
             for j in i+1..<showingCards.count {
                 for k in j+1..<showingCards.count {
-                    if areThreeCardsInSet(showingCards[i], showingCards[j], showingCards[k]) {
+                    if areThreeCardsInSet([i, j, k]) {
                         return [i, j, k]
                     }
                 }
@@ -158,7 +140,11 @@ struct GameModel {
         return []
     }
     
-    fileprivate func areThreeCardsInSet(_ card1: GameModel.Card, _ card2: GameModel.Card, _ card3: GameModel.Card) -> Bool {
+    func areThreeCardsInSet(_ cardIds : [Int]) -> Bool {
+        let card1 = cards[cardIds[0]]
+        let card2 = cards[cardIds[1]]
+        let card3 = cards[cardIds[2]]
+        
         let colors : Set<Color> = [card1.color, card2.color, card3.color]
         let numbers : Set<CardNumber> = [card1.number, card2.number, card3.number]
         let fills: Set<CardFillStyle> = [card1.fill, card2.fill, card3.fill]
@@ -167,22 +153,6 @@ struct GameModel {
                 isAllSameOrAllDifferent(numbers) &&
                 isAllSameOrAllDifferent(fills) &&
                 isAllSameOrAllDifferent(geometries)
-    }
-    
-    mutating func checkSelectedCards() {
-        let selectedCards = cards.filter { $0.isSelected }
-        if selectedCards.count != 3 {
-            isSelectedCardsInSet = false
-            return
-        }
-        let card1 = selectedCards[0]
-        let card2 = selectedCards[1]
-        let card3 = selectedCards[2]
-        
-        isSelectedCardsInSet = areThreeCardsInSet(card1, card2, card3)
-        cards[card1.id].isInSet = isSelectedCardsInSet
-        cards[card2.id].isInSet = isSelectedCardsInSet
-        cards[card3.id].isInSet = isSelectedCardsInSet
     }
 }
 

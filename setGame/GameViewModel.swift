@@ -6,13 +6,22 @@
 //
 
 import Foundation
+import SwiftUI
+
+//struct CardPresent {
+//    var internalCard : GameModel.Card
+//    var isSelected : Bool = false
+//    var isCardMatched : Bool = false
+//}
 
 class GameViewModel: ObservableObject {
+    
     typealias Card = GameModel.Card
     
 
-    
     @Published private(set) var model = GameModel()
+    
+    var selectedCardIds : [Int] = []
 
     func getShowingCards() -> Array<Card> {
         model.getShowingCards()
@@ -28,7 +37,16 @@ class GameViewModel: ObservableObject {
     }
         
     func selectCard(card: Card) {
-        model.selectCard(card: card)
+        if selectedCardIds.count < 3 {
+            selectedCardIds.append(card.id)
+        }
+        if selectedCardIds.count == 3 {
+            let cardIds = [selectedCardIds[0], selectedCardIds[1], selectedCardIds[2]]
+            if model.areThreeCardsInSet(cardIds) {
+                model.addMatchedCard(cardIds)
+                selectedCardIds.removeAll()
+            }
+        }
         objectWillChange.send()
     }
     
