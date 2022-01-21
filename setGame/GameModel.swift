@@ -41,7 +41,6 @@ struct GameModel {
         var fill  : CardFillStyle
         var color : Color
         var shape : CardGeometry
-        var isSelected: Bool = false
         
         init(_ id: Int, _ number : CardNumber, _ fillStyle : CardFillStyle, _ color : Color, _ shape : CardGeometry) {
             self.id = id
@@ -102,7 +101,7 @@ struct GameModel {
         return nil
     }
     
-    fileprivate mutating func dealThreeMoreCards() -> [Card?] {
+    mutating func dealThreeMoreCards() -> [Card?] {
         [getToBeShownCard(), getToBeShownCard(), getToBeShownCard()]
     }
 
@@ -117,7 +116,7 @@ struct GameModel {
             showingCards.append(cards[cardId])
         }
         for (index, card) in showingCards.enumerated() {
-            print("Showing card:[", index, "]", card.id, card.isSelected)
+            print("Showing card:[", index, "]", card.id)
         }
         return showingCards
     }

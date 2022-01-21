@@ -16,9 +16,12 @@ struct GameView: View {
     var body: some View {
         VStack {
             AspectVGrid(items: gameViewModel.getShowingCards(), aspectRatio: 55/87) { item in
-                CardView(card: item).padding(3).contentShape(Rectangle()).onTapGesture {
-                    gameViewModel.selectCard(card: item)
-                }
+                CardView(card: item, isInSet: gameViewModel.isCardInSet(card: item), isSelected: gameViewModel.isCardSelected(card: item))
+                    .padding(3)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        gameViewModel.selectCard(card: item)
+                    }
             }
             HStack {
                 Text(hint)
@@ -76,6 +79,8 @@ struct GameView: View {
 // https://stackoverflow.com/questions/43815549/ios-how-to-pass-a-model-from-view-model-to-view-model-using-mvvm/43820233
 struct CardView: View {
     var card : GameViewModel.Card
+    var isInSet : Bool
+    var isSelected : Bool
     
     @ViewBuilder
     func fillCard()  -> some View {
@@ -96,17 +101,17 @@ struct CardView: View {
     }
 
     func getLineWidth(of card : GameViewModel.Card) -> CGFloat {
-        if card.isSelected {
+        if isSelected {
             return 4
         }
         return 2
     }
     
     func getColor(of card : GameViewModel.Card) -> Color {
-        if card.isInSet {
+        if isInSet {
             return .orange
         }
-        if card.isSelected {
+        if isSelected {
             return .red
         }
         return .blue
@@ -114,7 +119,7 @@ struct CardView: View {
     
     @ViewBuilder
     func buildCardBackground(of card : GameViewModel.Card) -> some View {
-        if card.isInSet {
+        if isInSet {
             RoundedRectangle(cornerRadius: 5).fill().foregroundColor(.green).opacity(0.3)
         } else {
             RoundedRectangle(cornerRadius: 5).stroke(lineWidth: getLineWidth(of: card)).foregroundColor(getColor(of: card)).opacity(0.3)
