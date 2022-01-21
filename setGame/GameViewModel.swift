@@ -46,9 +46,16 @@ class GameViewModel: ObservableObject {
     }
     
     func selectCard(card: Card) {
+        if selectedCardIds.contains(card.id) {
+            selectedCardIds = selectedCardIds.filter{$0 != card.id}
+            objectWillChange.send()
+            return
+        }
         if selectedCardIds.count == 3 && model.areThreeCardsInSet(selectedCardIds) {
-            model.dealThreeMoreCards()
+            model.replaceMachedCard(selectedCardIds)
             selectedCardIds.removeAll()
+            objectWillChange.send()
+            return
         }
         if selectedCardIds.count < 3 {
             selectedCardIds.append(card.id)
@@ -59,6 +66,9 @@ class GameViewModel: ObservableObject {
             let cardIds = [selectedCardIds[0], selectedCardIds[1], selectedCardIds[2]]
             if model.areThreeCardsInSet(cardIds) {
                 model.addMatchedCard(cardIds)
+            } else {
+                selectedCardIds.removeAll()
+                selectedCardIds.append(card.id)
             }
         }
         objectWillChange.send()
@@ -70,6 +80,7 @@ class GameViewModel: ObservableObject {
     
     func newGame() {
         model = GameModel()
+        selectedCardIds.removeAll()
         objectWillChange.send()
 
     }

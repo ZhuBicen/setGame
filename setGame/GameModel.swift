@@ -84,6 +84,15 @@ struct GameModel {
             }
         }
     }
+    
+    mutating func replaceMachedCard(_ matchedCardIds : [Int]) {
+        for (index, showingCardId) in showingCardsIds.enumerated() {
+            if matchedCardIs.contains(showingCardId) {
+                showingCardsIds[index] = getToBeShownCard()!.id
+            }
+        }
+    }
+    
     fileprivate func isCardShowing(_ card : Card) -> Bool {
         self.showingCardsIds.contains(card.id)
     }
