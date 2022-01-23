@@ -18,6 +18,12 @@ class GameViewModel: ObservableObject {
     
     typealias Card = GameModel.Card
     
+    struct CardPresent {
+        var card : GameModel.Card
+        var isSelected : Bool = false
+        var isMatched : Bool = false
+    }
+    
 
     @Published private(set) var model = GameModel()
     
@@ -46,33 +52,27 @@ class GameViewModel: ObservableObject {
     }
     
     func selectCard(card: Card) {
-//        if selectedCardIds.contains(card.id) {
-//            selectedCardIds = selectedCardIds.filter{$0 != card.id}
-//            objectWillChange.send()
-//            return
-//        }
-//        if selectedCardIds.count == 3 && model.areThreeCardsInSet(selectedCardIds) {
-//            if !selectedCardIds.contains(card.id) {
-//
-//            }
-//            model.replaceMachedCard(selectedCardIds)
-//            selectedCardIds.removeAll()
-//            objectWillChange.send()
-//            return
-//        }
-        if selectedCardIds.count < 3 {
-            selectedCardIds.append(card.id)
-        } else if selectedCardIds.count > 3 {
+        if selectedCardIds.count == 3 && model.areThreeCardsInSet(selectedCardIds) {
+            let oldSelectedCardIds = selectedCardIds
+            model.replaceMachedCard(selectedCardIds)
             selectedCardIds.removeAll()
-            selectedCardIds.append(card.id)
-        } else { // == 3
-            
-            let cardIds = [selectedCardIds[0], selectedCardIds[1], selectedCardIds[2]]
-            if model.areThreeCardsInSet(cardIds) {
-                model.addMatchedCard(cardIds)
-            } else {
-                selectedCardIds.removeAll()
+            if !oldSelectedCardIds.contains(card.id) {
                 selectedCardIds.append(card.id)
+            }
+        } else {
+            if selectedCardIds.contains(card.id) { // deselect card
+                selectedCardIds = selectedCardIds.filter{$0 != card.id}
+            } else {
+                if selectedCardIds.count < 3 { // select card
+                    selectedCardIds.append(card.id)
+                } else if selectedCardIds.count == 3 {
+                    if model.areThreeCardsInSet(selectedCardIds) {
+                        model.replaceMachedCard(selectedCardIds)
+                    } else {
+                        selectedCardIds.removeAll()
+                        selectedCardIds.append(card.id)
+                    }
+                }
             }
         }
         objectWillChange.send()

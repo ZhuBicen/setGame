@@ -84,11 +84,17 @@ struct GameModel {
             }
         }
     }
-    
     mutating func replaceMachedCard(_ matchedCardIds : [Int]) {
+        addMatchedCard(matchedCardIds)
+
         for (index, showingCardId) in showingCardsIds.enumerated() {
-            if matchedCardIs.contains(showingCardId) {
-                showingCardsIds[index] = getToBeShownCard()!.id
+            // print("matched cards:", matchedCardIds, "contains", showingCardId, matchedCardIs.contains(showingCardId))
+            //if matchedCardIs.contains(showingCardId) {
+            for matchedCardId in matchedCardIds {
+                if matchedCardId == showingCardId {
+                    showingCardsIds[index] = getToBeShownCard()!.id
+                    print("To be shown :", index, "=>", showingCardsIds[index])
+                }
             }
         }
     }
@@ -125,8 +131,9 @@ struct GameModel {
             showingCards.append(cards[cardId])
         }
         for (index, card) in showingCards.enumerated() {
-            print("Showing card:[", index, "]", card.id)
+            print("    Showing card:[", index, "]", card.id)
         }
+        print("       ============")
         return showingCards
     }
     
@@ -135,11 +142,13 @@ struct GameModel {
     }
     
     func findMatchingCards() -> [Int] {
-        let showingCards = getShowingCards()
+        print("Find matching card from:", showingCardsIds)
+        let showingCards = showingCardsIds
         for i in 0..<showingCards.count {
             for j in i+1..<showingCards.count {
                 for k in j+1..<showingCards.count {
                     if areThreeCardsInSet([i, j, k]) {
+                        print(" Matched result:", [i, j, k])
                         return [i, j, k]
                     }
                 }
@@ -149,14 +158,22 @@ struct GameModel {
     }
     
     func areThreeCardsInSet(_ cardIds : [Int]) -> Bool {
+        print("Matched cards:", cardIds)
         let card1 = cards[cardIds[0]]
         let card2 = cards[cardIds[1]]
         let card3 = cards[cardIds[2]]
+        print("Card1:", card1)
+        print("Card2:", card2)
+        print("Card3:", card3)
         
         let colors : Set<Color> = [card1.color, card2.color, card3.color]
         let numbers : Set<CardNumber> = [card1.number, card2.number, card3.number]
         let fills: Set<CardFillStyle> = [card1.fill, card2.fill, card3.fill]
         let geometries: Set<CardGeometry> = [card1.shape, card2.shape, card3.shape]
+        print("Colors:", colors)
+        print("Numbers:", numbers)
+        print("Fills:", fills)
+        print("Geometries:", geometries)
         return isAllSameOrAllDifferent(colors) &&
                 isAllSameOrAllDifferent(numbers) &&
                 isAllSameOrAllDifferent(fills) &&
