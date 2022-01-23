@@ -28,13 +28,7 @@ struct GameModel {
         case empty
         case grid
     }
-    
-    //    enum CardColor : CaseIterable {
-    //        case red = Color.red
-    //        case green = Color.green
-    //        case purple = Color.purple
-    //    }
-    
+
     struct Card : Identifiable {
         var id : Int
         var number : CardNumber
@@ -51,13 +45,14 @@ struct GameModel {
         }
     }
     
-    var cards : Array<Card> = []
-    var showingCardsIds : [Int] = []
-    var matchedCardIs : [Int] = []
+    var deckCards : [Card] = []
+    var showingCards : [Card] = []
+    var matchedCards : [Card] = []
     
     
     init() {
         var i : Int = 0
+        var cards : [Card] = []
         for number in CardNumber.allCases {
             for fill in CardFillStyle.allCases {
                 for color in [Color.red, Color.green, Color.purple] {
@@ -69,49 +64,47 @@ struct GameModel {
             }
         }
         cards = cards.shuffled()
-        for index in 0..<cards.count {
-            cards[index].id = index
-        }
         for index in 0...11 {
-            showingCardsIds.append(index)
+            showingCards.append(cards[index])
+        }
+        for index in 12..<cards.count {
+            deckCards.append(cards[index])
         }
     }
     mutating func showMoreCards() {
         for _ in 0...2 {
             let card = getToBeShownCard()
             if card != nil {
-                showingCardsIds.append(card!.id)
+                showingCards.append(card!)
             }
         }
     }
-    mutating func replaceMachedCard(_ matchedCardIds : [Int]) {
-        addMatchedCard(matchedCardIds)
-
-        for (index, showingCardId) in showingCardsIds.enumerated() {
-            // print("matched cards:", matchedCardIds, "contains", showingCardId, matchedCardIs.contains(showingCardId))
-            //if matchedCardIs.contains(showingCardId) {
-            for matchedCardId in matchedCardIds {
-                if matchedCardId == showingCardId {
-                    showingCardsIds[index] = getToBeShownCard()!.id
-                    print("To be shown :", index, "=>", showingCardsIds[index])
+    mutating func replaceMachedCard(_ matchedCard : [Card]) {
+        addMatchedCard(matchedCard)
+        
+        for (index, card) in showingCards.enumerated() {
+            if isCardMatched(card) {
+                let card = getToBeShownCard()
+                if card != nil {
+                    showingCards[index] = card!
                 }
             }
         }
     }
     
     fileprivate func isCardShowing(_ card : Card) -> Bool {
-        self.showingCardsIds.contains(card.id)
+        showingCards.contains{$0.id == card.id}
     }
     
     fileprivate func isCardMatched(_ card : Card) -> Bool {
-        self.matchedCardIs.contains(card.id)
+        matchedCards.contains{$0.id == card.id}
     }
     
-    func getToBeShownCard() -> Card? {
-        for  card in cards {
-            if !isCardShowing(card) && !isCardMatched(card) {
-                return card
-            }
+    mutating func getToBeShownCard() -> Card? {
+        if deckCards.count != 0 {
+            let card = deckCards.first
+            deckCards.removeFirst()
+            return card
         }
         return nil
     }
@@ -121,20 +114,12 @@ struct GameModel {
     }
 
     
-    mutating func addMatchedCard(_ cardIds : [Int]) {
-        matchedCardIs += cardIds
+    mutating func addMatchedCard(_ cards : [Card]) {
+        matchedCards += cards
     }
     
     func getShowingCards() -> Array<Card>{
-        var showingCards : [Card] = []
-        for cardId in showingCardsIds {
-            showingCards.append(cards[cardId])
-        }
-        for (index, card) in showingCards.enumerated() {
-            print("    Showing card:[", index, "]", card.id)
-        }
-        print("       ============")
-        return showingCards
+       showingCards
     }
     
     func isAllSameOrAllDifferent<T>(_ featureSet : Set<T>) -> Bool {
@@ -142,13 +127,10 @@ struct GameModel {
     }
     
     func findMatchingCards() -> [Int] {
-        print("Find matching card from:", showingCardsIds)
-        let showingCards = showingCardsIds
         for i in 0..<showingCards.count {
             for j in i+1..<showingCards.count {
                 for k in j+1..<showingCards.count {
-                    if areThreeCardsInSet([i, j, k]) {
-                        print(" Matched result:", [i, j, k])
+                    if areThreeCardsInSet([showingCards[i], showingCards[j], showingCards[k]]) {
                         return [i, j, k]
                     }
                 }
@@ -157,23 +139,15 @@ struct GameModel {
         return []
     }
     
-    func areThreeCardsInSet(_ cardIds : [Int]) -> Bool {
-        print("Matched cards:", cardIds)
-        let card1 = cards[cardIds[0]]
-        let card2 = cards[cardIds[1]]
-        let card3 = cards[cardIds[2]]
-        print("Card1:", card1)
-        print("Card2:", card2)
-        print("Card3:", card3)
+    func areThreeCardsInSet(_ cards : [Card]) -> Bool {
+        let card1 = cards[0]
+        let card2 = cards[1]
+        let card3 = cards[2]
         
         let colors : Set<Color> = [card1.color, card2.color, card3.color]
         let numbers : Set<CardNumber> = [card1.number, card2.number, card3.number]
         let fills: Set<CardFillStyle> = [card1.fill, card2.fill, card3.fill]
         let geometries: Set<CardGeometry> = [card1.shape, card2.shape, card3.shape]
-        print("Colors:", colors)
-        print("Numbers:", numbers)
-        print("Fills:", fills)
-        print("Geometries:", geometries)
         return isAllSameOrAllDifferent(colors) &&
                 isAllSameOrAllDifferent(numbers) &&
                 isAllSameOrAllDifferent(fills) &&

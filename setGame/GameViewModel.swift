@@ -8,12 +8,6 @@
 import Foundation
 import SwiftUI
 
-//struct CardPresent {
-//    var internalCard : GameModel.Card
-//    var isSelected : Bool = false
-//    var isCardMatched : Bool = false
-//}
-
 class GameViewModel: ObservableObject {
     
     typealias Card = GameModel.Card
@@ -27,7 +21,7 @@ class GameViewModel: ObservableObject {
 
     @Published private(set) var model = GameModel()
     
-    var selectedCardIds : [Int] = []
+    @Published var selectedCards : [Card] = []
 
     func getShowingCards() -> Array<Card> {
         model.getShowingCards()
@@ -38,44 +32,38 @@ class GameViewModel: ObservableObject {
         objectWillChange.send()
     }
     
-//    var isInSet : Bool {
-//        return selectedCardIds.count == 3 && model.areThreeCardsInSet(selectedCardIds)
-//    }
-    
-    
     func isCardInSet(card : Card) -> Bool {
-        selectedCardIds.count == 3 && selectedCardIds.contains(card.id) && model.areThreeCardsInSet(selectedCardIds)
+        selectedCards.count == 3 && selectedCards.contains{$0.id == card.id} && model.areThreeCardsInSet(selectedCards)
     }
     
     func isCardSelected(card : Card) -> Bool {
-        selectedCardIds.contains(card.id)
+        selectedCards.contains{$0.id == card.id}
     }
     
     func selectCard(card: Card) {
-        if selectedCardIds.count == 3 && model.areThreeCardsInSet(selectedCardIds) {
-            let oldSelectedCardIds = selectedCardIds
-            model.replaceMachedCard(selectedCardIds)
-            selectedCardIds.removeAll()
-            if !oldSelectedCardIds.contains(card.id) {
-                selectedCardIds.append(card.id)
+        if selectedCards.count == 3 && model.areThreeCardsInSet(selectedCards) {
+            let oldSelectedCardIds = selectedCards
+            model.replaceMachedCard(selectedCards)
+            selectedCards.removeAll()
+            if !oldSelectedCardIds.contains(where:{$0.id == card.id}) {
+                selectedCards.append(card)
             }
         } else {
-            if selectedCardIds.contains(card.id) { // deselect card
-                selectedCardIds = selectedCardIds.filter{$0 != card.id}
+            if selectedCards.contains(where: {$0.id == card.id}) { // deselect card
+                selectedCards = selectedCards.filter{$0.id != card.id}
             } else {
-                if selectedCardIds.count < 3 { // select card
-                    selectedCardIds.append(card.id)
-                } else if selectedCardIds.count == 3 {
-                    if model.areThreeCardsInSet(selectedCardIds) {
-                        model.replaceMachedCard(selectedCardIds)
+                if selectedCards.count < 3 { // select card
+                    selectedCards.append(card)
+                } else if selectedCards.count == 3 {
+                    if model.areThreeCardsInSet(selectedCards) {
+                        model.replaceMachedCard(selectedCards)
                     } else {
-                        selectedCardIds.removeAll()
-                        selectedCardIds.append(card.id)
+                        selectedCards.removeAll()
+                        selectedCards.append(card)
                     }
                 }
             }
         }
-        objectWillChange.send()
     }
     
     func hint() -> String {
@@ -84,9 +72,7 @@ class GameViewModel: ObservableObject {
     
     func newGame() {
         model = GameModel()
-        selectedCardIds.removeAll()
-        objectWillChange.send()
-
+        selectedCards.removeAll()
     }
     
     
