@@ -27,6 +27,10 @@ class GameViewModel: ObservableObject {
         model.getShowingCards()
     }
     
+    var isCardInDeck : Bool {
+        model.isCardInDeck()
+    }
+    
     func showMoreCards() {
         model.showMoreCards()
         objectWillChange.send()

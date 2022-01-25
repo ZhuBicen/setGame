@@ -27,7 +27,9 @@ struct GameView: View {
                 Text(hint)
             }
             HStack {
-                deal3MoreCards
+                if gameViewModel.isCardInDeck {
+                    deal3MoreCards
+                }
                 Spacer()
                 matchCards
                 Spacer()

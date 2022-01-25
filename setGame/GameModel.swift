@@ -49,6 +49,9 @@ struct GameModel {
     var showingCards : [Card] = []
     var matchedCards : [Card] = []
     
+    func isCardInDeck() -> Bool {
+        !deckCards.isEmpty
+    }
     
     init() {
         var i : Int = 0
