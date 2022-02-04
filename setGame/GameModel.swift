@@ -46,7 +46,7 @@ struct GameModel {
     }
     
     var deckCards : [Card] = []
-    var showingCards : [Card] = []
+    var dealtCards : [Card] = []
     var matchedCards : [Card] = []
     
     func isCardInDeck() -> Bool {
@@ -66,44 +66,51 @@ struct GameModel {
                 }
             }
         }
-        cards = cards.shuffled()
-        for index in 0...11 {
-            showingCards.append(cards[index])
-        }
-        for index in 12..<cards.count {
-            deckCards.append(cards[index])
+       deckCards = cards// .shuffled()
+    }
+    
+    mutating func dealCards() {
+        dealtCards = []
+        for _ in 0...11 {
+            dealtCards.append(dealOneCard()!)
         }
     }
-    mutating func showMoreCards() {
+    
+    mutating func dealMoreCards() -> [Card] {
+        var newDealtCards : [Card] = []
         for _ in 0...2 {
-            let card = getToBeShownCard()
+            let card = dealOneCard()
             if card != nil {
-                showingCards.append(card!)
+                print("Deal card .\(card!.id)")
+                dealtCards.append(card!)
+                newDealtCards.append(card!)
             }
         }
+        return newDealtCards
     }
+    
     mutating func replaceMachedCard(_ matchedCard : [Card]) {
         addMatchedCard(matchedCard)
         
-        for (index, card) in showingCards.enumerated() {
+        for (index, card) in dealtCards.enumerated() {
             if isCardMatched(card) {
-                let card = getToBeShownCard()
+                let card = dealOneCard()
                 if card != nil {
-                    showingCards[index] = card!
+                    dealtCards[index] = card!
                 }
             }
         }
     }
     
     fileprivate func isCardShowing(_ card : Card) -> Bool {
-        showingCards.contains{$0.id == card.id}
+        dealtCards.contains{$0.id == card.id}
     }
     
     fileprivate func isCardMatched(_ card : Card) -> Bool {
         matchedCards.contains{$0.id == card.id}
     }
     
-    mutating func getToBeShownCard() -> Card? {
+    mutating func dealOneCard() -> Card? {
         if deckCards.count != 0 {
             let card = deckCards.first
             deckCards.removeFirst()
@@ -113,7 +120,7 @@ struct GameModel {
     }
     
     mutating func dealThreeMoreCards() -> [Card?] {
-        [getToBeShownCard(), getToBeShownCard(), getToBeShownCard()]
+        [dealOneCard(), dealOneCard(), dealOneCard()]
     }
 
     
@@ -121,8 +128,12 @@ struct GameModel {
         matchedCards += cards
     }
     
-    func getShowingCards() -> Array<Card>{
-       showingCards
+    func getDealtCards() -> Array<Card>{
+       dealtCards
+    }
+    
+    func getDeckCards() -> Array<Card> {
+        deckCards
     }
     
     func isAllSameOrAllDifferent<T>(_ featureSet : Set<T>) -> Bool {
@@ -130,10 +141,10 @@ struct GameModel {
     }
     
     func findMatchingCards() -> [Int] {
-        for i in 0..<showingCards.count {
-            for j in i+1..<showingCards.count {
-                for k in j+1..<showingCards.count {
-                    if areThreeCardsInSet([showingCards[i], showingCards[j], showingCards[k]]) {
+        for i in 0..<dealtCards.count {
+            for j in i+1..<dealtCards.count {
+                for k in j+1..<dealtCards.count {
+                    if areThreeCardsInSet([dealtCards[i], dealtCards[j], dealtCards[k]]) {
                         return [i, j, k]
                     }
                 }

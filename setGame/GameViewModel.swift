@@ -23,17 +23,22 @@ class GameViewModel: ObservableObject {
     
     @Published var selectedCards : [Card] = []
 
-    func getShowingCards() -> Array<Card> {
-        model.getShowingCards()
+    func getDealtCards() -> Array<Card> {
+        model.getDealtCards()
+    }
+    
+    func getDeckCards() -> Array<Card> {
+        model.getDeckCards()
     }
     
     var isCardInDeck : Bool {
         model.isCardInDeck()
     }
     
-    func showMoreCards() {
-        model.showMoreCards()
+    func dealMoreCards() -> [Card] {
+        let cards = model.dealMoreCards()
         objectWillChange.send()
+        return cards
     }
     
     func isCardInSet(card : Card) -> Bool {
@@ -68,6 +73,11 @@ class GameViewModel: ObservableObject {
                 }
             }
         }
+    }
+    
+    func dealCards() {
+        model.dealCards()
+        objectWillChange.send()
     }
     
     func hint() -> String {

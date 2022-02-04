@@ -12,17 +12,15 @@ import SwiftUI
 struct GameView: View {
     @ObservedObject var gameViewModel: GameViewModel
     @State var hint : String = ""
+    @Namespace var dealingNamespace
+    
+    @State var dealtCards = Set<Int>()
     
     var body: some View {
         VStack {
-            AspectVGrid(items: gameViewModel.getShowingCards(), aspectRatio: 55/87) { item in
-                CardView(card: item, isInSet: gameViewModel.isCardInSet(card: item), isSelected: gameViewModel.isCardSelected(card: item))
-                    .padding(3)
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        gameViewModel.selectCard(card: item)
-                    }
-            }
+            gameBody
+            deckBody
+
             HStack {
                 Text(hint)
             }
@@ -30,19 +28,85 @@ struct GameView: View {
                 if gameViewModel.isCardInDeck {
                     deal3MoreCards
                 }
-                Spacer()
                 matchCards
                 Spacer()
                 newGame
-                Spacer()
-            }
+            }.padding(.horizontal)
 
         }
     }
+    
+    func isCardDealt(_ card: GameViewModel.Card) -> Bool {
+        dealtCards.contains(card.id)
+    }
+    
+    func ZIndex(of card : GameViewModel.Card) -> Double {
+        -Double(gameViewModel.getDeckCards().firstIndex{$0.id == card.id}!)
+    }
+    
+    func dealCard(_ card: GameViewModel.Card) {
+        dealtCards.insert(card.id)
+    }
+    
+    var gameBody : some View {
+        AspectVGrid(items: gameViewModel.getDealtCards(), aspectRatio: 55/87) { item in
+            if isCardDealt(item) {
+                CardView(card: item, isInSet: gameViewModel.isCardInSet(card: item), isSelected: gameViewModel.isCardSelected(card: item))
+                    .matchedGeometryEffect(id: item.id, in: dealingNamespace)
+                    .padding(3)
+                    .zIndex(ZIndex(of: item))
+                    .contentShape(Rectangle())
+                    .transition(AnyTransition.asymmetric(insertion: .identity, removal: .scale))
+                    .onTapGesture {
+                        gameViewModel.selectCard(card: item)
+                    }
+            } else {
+                Color.clear
+            }
+        }.onAppear {
+            gameViewModel.dealCards()
+            for (index, card) in (gameViewModel.getDealtCards().enumerated()) {
+                withAnimation(.linear(duration: 2).delay(Double(Double(index) * 0.3))) {
+                    dealCard(card)
+                }
+            }
+        }
+    }
+    
+    struct GameConstants {
+        static let undealtHeight : Double = 120
+        static let undealWidth : Double = 120 * (2/3)
+    }
+    
+    var deckBody : some View {
+        ZStack {
+            ForEach(gameViewModel.getDeckCards()) { card in
+                CardView(card: card, isInSet: false, isSelected: false)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .zIndex(ZIndex(of: card))
+                    .transition(AnyTransition.asymmetric(insertion: .opacity, removal:.identity ))
+            }
+        }
+        .frame(width: GameConstants.undealWidth,
+               height: GameConstants.undealtHeight,
+               alignment: .center)
+        .onTapGesture {
+            withAnimation {
+                for (index, card) in (gameViewModel.dealMoreCards().enumerated()) {
+                    // if !isCardDealt(card) {
+                        withAnimation(.linear(duration: 2).delay(Double(Double(index) * 0.3))) {
+                            dealCard(card)
+                        }
+                    // }
+                }
+            }
+        }
+    }
+    
     var deal3MoreCards : some View {
         VStack {
             Button(action: {
-                gameViewModel.showMoreCards()
+                gameViewModel.dealMoreCards()
             }, label:{
                Image(systemName: "plus.circle.fill")
         })
@@ -75,9 +139,7 @@ struct GameView: View {
 // https://www.hackingwithswift.com/quick-start/swiftui/how-to-control-the-tappable-area-of-a-view-using-contentshape
 // https://stackoverflow.com/questions/63154815/why-doesnt-swiftui-ontapgesture-always-work
 // https://stackoverflow.com/questions/56786163/swiftui-how-to-draw-filled-and-stroked-shape
-
 // https://zhuanlan.zhihu.com/p/147475930
-
 // https://stackoverflow.com/questions/43815549/ios-how-to-pass-a-model-from-view-model-to-view-model-using-mvvm/43820233
 struct CardView: View {
     var card : GameViewModel.Card
@@ -120,17 +182,20 @@ struct CardView: View {
     }
     
     @ViewBuilder
-    func buildCardBackground(of card : GameViewModel.Card) -> some View {
+    func buildBackground(of card : GameViewModel.Card) -> some View {
         if isInSet {
             RoundedRectangle(cornerRadius: 5).fill().foregroundColor(.green).opacity(0.3)
         } else {
-            RoundedRectangle(cornerRadius: 5).stroke(lineWidth: getLineWidth(of: card)).foregroundColor(getColor(of: card)).opacity(0.3)
+            ZStack {
+                RoundedRectangle(cornerRadius: 5).fill().foregroundColor(.white)
+                RoundedRectangle(cornerRadius: 5).stroke(lineWidth: getLineWidth(of: card)).foregroundColor(getColor(of: card)).opacity(0.3)
+            }
         }
     }
     
     var body : some View {
 
-        let cardBackground = buildCardBackground(of: card)
+        let cardBackground = buildBackground(of: card)
         GeometryReader { geometry in
             switch card.number {
             case .one:
