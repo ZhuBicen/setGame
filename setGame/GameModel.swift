@@ -112,8 +112,8 @@ struct GameModel {
     
     mutating func dealOneCard() -> Card? {
         if deckCards.count != 0 {
-            let card = deckCards.last
-            deckCards.removeLast()
+            let card = deckCards.first
+            deckCards.removeFirst()
             return card
         }
         return nil

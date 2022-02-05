@@ -18,6 +18,7 @@
 		346F324D2787257A00DB1EC2 /* CardShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F324C2787257A00DB1EC2 /* CardShape.swift */; };
 		346F3251278A865F00DB1EC2 /* GameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F3250278A865F00DB1EC2 /* GameModel.swift */; };
 		346F3253278A88BF00DB1EC2 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F3252278A88BF00DB1EC2 /* GameViewModel.swift */; };
+		DC73206527AE31B7007CA285 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC73206427AE31B7007CA285 /* CardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		346F324C2787257A00DB1EC2 /* CardShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardShape.swift; sourceTree = "<group>"; };
 		346F3250278A865F00DB1EC2 /* GameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModel.swift; sourceTree = "<group>"; };
 		346F3252278A88BF00DB1EC2 /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
+		DC73206427AE31B7007CA285 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 				346F322027871F2F00DB1EC2 /* setGameApp.swift */,
 				346F3250278A865F00DB1EC2 /* GameModel.swift */,
 				346F322227871F2F00DB1EC2 /* GameView.swift */,
+				DC73206427AE31B7007CA285 /* CardView.swift */,
 				346F324A2787200C00DB1EC2 /* AspectVGrid.swift */,
 				346F322427871F3000DB1EC2 /* Assets.xcassets */,
 				346F322627871F3000DB1EC2 /* Preview Content */,
@@ -269,6 +272,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC73206527AE31B7007CA285 /* CardView.swift in Sources */,
 				346F3253278A88BF00DB1EC2 /* GameViewModel.swift in Sources */,
 				346F3251278A865F00DB1EC2 /* GameModel.swift in Sources */,
 				346F324D2787257A00DB1EC2 /* CardShape.swift in Sources */,
