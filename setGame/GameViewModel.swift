@@ -18,6 +18,7 @@ class GameViewModel: ObservableObject {
         var isMatched : Bool = false
     }
     
+    var zIndexOfCards : [Int:Double] = [:]
 
     @Published private(set) var model = GameModel()
     
@@ -25,6 +26,14 @@ class GameViewModel: ObservableObject {
 
     func getDealtCards() -> Array<Card> {
         model.getDealtCards()
+    }
+    
+    func setZIndex(of card : GameModel.Card, _ zIndex : Double) {
+        zIndexOfCards[card.id] = zIndex
+    }
+    
+    func getZIndex(of card : Card) -> Double {
+        zIndexOfCards[card.id] ?? 0
     }
     
     func getDeckCards() -> Array<Card> {

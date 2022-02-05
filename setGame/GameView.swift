@@ -41,7 +41,9 @@ struct GameView: View {
     }
     
     func ZIndex(of card : GameViewModel.Card) -> Double {
-        -Double(gameViewModel.getDeckCards().firstIndex{$0.id == card.id}!)
+        let newZIndex = Double(gameViewModel.getDeckCards().firstIndex(where:{$0.id == card.id}) ?? 0)
+        gameViewModel.setZIndex(of: card, newZIndex)
+        return newZIndex
     }
     
     func dealCard(_ card: GameViewModel.Card) {
@@ -54,7 +56,7 @@ struct GameView: View {
                 CardView(card: item, isInSet: gameViewModel.isCardInSet(card: item), isSelected: gameViewModel.isCardSelected(card: item))
                     .matchedGeometryEffect(id: item.id, in: dealingNamespace)
                     .padding(3)
-                    .zIndex(ZIndex(of: item))
+                    .zIndex(gameViewModel.getZIndex(of: item))
                     .contentShape(Rectangle())
                     .transition(AnyTransition.asymmetric(insertion: .identity, removal: .scale))
                     .onTapGesture {
@@ -66,8 +68,9 @@ struct GameView: View {
         }.onAppear {
             gameViewModel.dealCards()
             for (index, card) in (gameViewModel.getDealtCards().enumerated()) {
-                withAnimation(.linear(duration: 2).delay(Double(Double(index) * 0.3))) {
+                withAnimation(.linear(duration: 2).delay(Double(Double(index) * 1))) {
                     dealCard(card)
+                    ZIndex(of: card)
                 }
             }
         }
@@ -93,11 +96,9 @@ struct GameView: View {
         .onTapGesture {
             withAnimation {
                 for (index, card) in (gameViewModel.dealMoreCards().enumerated()) {
-                    // if !isCardDealt(card) {
                         withAnimation(.linear(duration: 2).delay(Double(Double(index) * 0.3))) {
                             dealCard(card)
                         }
-                    // }
                 }
             }
         }
