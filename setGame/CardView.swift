@@ -7,6 +7,7 @@ import SwiftUI
 // https://stackoverflow.com/questions/43815549/ios-how-to-pass-a-model-from-view-model-to-view-model-using-mvvm/43820233
 struct CardView: View {
     var card : GameViewModel.Card
+    var isFaceUp : Bool
     var isInSet : Bool
     var isSelected : Bool
     
@@ -60,62 +61,69 @@ struct CardView: View {
     var body : some View {
 
         let cardBackground = buildBackground(of: card)
-        GeometryReader { geometry in
-            switch card.number {
-            case .one:
-                ZStack {
-                    cardBackground
-                    VStack {
-                        Spacer(minLength: geometry.size.height * (34/85))
-                        HStack {
-                            Spacer(minLength: geometry.size.width * (7/55))
-                            fillCard()
-                            Spacer(minLength: geometry.size.width * (7/55))
-                        }.foregroundColor(card.color)
-                        Spacer(minLength: geometry.size.height * (35/87))
-                        // Text(String(card.id))
-                    }
-                }
-            case .two:
-                ZStack {
-                    cardBackground
-                    VStack {
-                        Spacer(minLength: geometry.size.height * (21/85))
-                        HStack {
-                            Spacer(minLength: geometry.size.width * (7/55))
-                            VStack {
+        if isFaceUp {
+            GeometryReader { geometry in
+                switch card.number {
+                case .one:
+                    ZStack {
+                        cardBackground
+                        VStack {
+                            Spacer(minLength: geometry.size.height * (34/85))
+                            HStack {
+                                Spacer(minLength: geometry.size.width * (7/55))
                                 fillCard()
-                                Spacer(minLength: geometry.size.height * (5/85))
-                                fillCard()
+                                Spacer(minLength: geometry.size.width * (7/55))
                             }.foregroundColor(card.color)
-                            Spacer(minLength: geometry.size.width * (7/55))
+                            Spacer(minLength: geometry.size.height * (35/87))
+                            // Text(String(card.id))
                         }
-                        Spacer(minLength: geometry.size.height * (21/87))
-                        // Text(String(card.id))
+                    }
+                case .two:
+                    ZStack {
+                        cardBackground
+                        VStack {
+                            Spacer(minLength: geometry.size.height * (21/85))
+                            HStack {
+                                Spacer(minLength: geometry.size.width * (7/55))
+                                VStack {
+                                    fillCard()
+                                    Spacer(minLength: geometry.size.height * (5/85))
+                                    fillCard()
+                                }.foregroundColor(card.color)
+                                Spacer(minLength: geometry.size.width * (7/55))
+                            }
+                            Spacer(minLength: geometry.size.height * (21/87))
+                            // Text(String(card.id))
 
+                        }
+                    }
+
+                case .three:
+                    ZStack {
+                        cardBackground
+                        VStack {
+                            Spacer(minLength: geometry.size.height * (10/85))
+                            HStack {
+                                Spacer(minLength: geometry.size.width * (7/55))
+                                VStack {
+                                    fillCard()
+                                    Spacer(minLength: geometry.size.height * (5/85))
+                                    fillCard()
+                                    Spacer(minLength: geometry.size.height * (5/85))
+                                    fillCard()
+                                }.foregroundColor(card.color)
+                                Spacer(minLength: geometry.size.width * (7/55))
+                            }
+                            Spacer(minLength: geometry.size.height * (10/87))
+                            // Text(String(card.id))
+                        }
                     }
                 }
-
-            case .three:
-                ZStack {
-                    cardBackground
-                    VStack {
-                        Spacer(minLength: geometry.size.height * (10/85))
-                        HStack {
-                            Spacer(minLength: geometry.size.width * (7/55))
-                            VStack {
-                                fillCard()
-                                Spacer(minLength: geometry.size.height * (5/85))
-                                fillCard()
-                                Spacer(minLength: geometry.size.height * (5/85))
-                                fillCard()
-                            }.foregroundColor(card.color)
-                            Spacer(minLength: geometry.size.width * (7/55))
-                        }
-                        Spacer(minLength: geometry.size.height * (10/87))
-                        // Text(String(card.id))
-                    }
-                }
+            }
+        } else {
+            ZStack {
+                cardBackground
+                Text(String(card.id)).font(.largeTitle)
             }
         }
     }

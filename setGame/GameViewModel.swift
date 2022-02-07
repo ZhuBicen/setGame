@@ -28,6 +28,10 @@ class GameViewModel: ObservableObject {
         model.getDealtCards()
     }
     
+    func getDiscardedCards() -> Array<Card> {
+        model.getDiscaredCards()
+    }
+    
     func setZIndex(of card : GameModel.Card, _ zIndex : Double) {
         zIndexOfCards[card.id] = zIndex
     }

@@ -136,6 +136,10 @@ struct GameModel {
         deckCards
     }
     
+    func getDiscaredCards() -> Array<Card> {
+        matchedCards
+    }
+    
     func isAllSameOrAllDifferent<T>(_ featureSet : Set<T>) -> Bool {
         return featureSet.count == 1 || featureSet.count == 3
     }
