@@ -56,12 +56,7 @@ struct CardView: View {
             }
         }
     }
-//    var body : some View {
-//        ZStack {
-//            Rectangle().fill().foregroundColor(.white)
-//            Text(String(card.id))
-//        }
-//    }
+
     var body : some View {
 
         let cardBackground = buildBackground(of: card)
@@ -78,6 +73,7 @@ struct CardView: View {
                             Spacer(minLength: geometry.size.width * (7/55))
                         }.foregroundColor(card.color)
                         Spacer(minLength: geometry.size.height * (35/87))
+                        // Text(String(card.id))
                     }
                 }
             case .two:
@@ -95,6 +91,8 @@ struct CardView: View {
                             Spacer(minLength: geometry.size.width * (7/55))
                         }
                         Spacer(minLength: geometry.size.height * (21/87))
+                        // Text(String(card.id))
+
                     }
                 }
 
@@ -115,6 +113,7 @@ struct CardView: View {
                             Spacer(minLength: geometry.size.width * (7/55))
                         }
                         Spacer(minLength: geometry.size.height * (10/87))
+                        // Text(String(card.id))
                     }
                 }
             }

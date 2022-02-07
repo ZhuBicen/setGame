@@ -63,7 +63,7 @@ struct GridRectangle: Shape {
             return Path()
         }
         var p = Path()
-        for x in stride(from: rect.minX, to: rect.maxX, by: (1/30) * rect.width) {
+        for x in stride(from: rect.minX, to: rect.maxX, by: (1/10) * rect.width) {
             p.move(to: CGPoint(x: x, y: rect.minY))
             p.addLine(to: CGPoint(x: x, y: rect.maxY))
         }

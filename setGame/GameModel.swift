@@ -78,7 +78,7 @@ struct GameModel {
     
     mutating func dealMoreCards() -> [Card] {
         var newDealtCards : [Card] = []
-        for _ in 0...2 {
+        for _ in 0..<1 {
             let card = dealOneCard()
             if card != nil {
                 print("Deal card .\(card!.id)")
@@ -112,8 +112,8 @@ struct GameModel {
     
     mutating func dealOneCard() -> Card? {
         if deckCards.count != 0 {
-            let card = deckCards.first
-            deckCards.removeFirst()
+            let card = deckCards.last
+            deckCards.removeLast()
             return card
         }
         return nil

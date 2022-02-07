@@ -18,7 +18,7 @@ struct GameView: View {
     
     var body: some View {
         VStack {
-            ZStack(alignment: .bottom){
+            ZStack(alignment: .bottom) {
                 gameBody
                 deckBody
             }
@@ -59,8 +59,8 @@ struct GameView: View {
                     .matchedGeometryEffect(id: item.id, in: dealingNamespace)
                     .padding(3)
                     .contentShape(Rectangle())
+                    .zIndex(Double(item.id))
                     .transition(AnyTransition.asymmetric(insertion: .identity, removal: .scale))
-                    .zIndex(-Double(item.id))
                     .onTapGesture {
                         gameViewModel.selectCard(card: item)
                     }
@@ -90,8 +90,8 @@ struct GameView: View {
             ForEach(gameViewModel.getDeckCards()) { card in
                 CardView(card: card, isInSet: false, isSelected: false)
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .zIndex(Double(card.id))
                     .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity ))
-                    .zIndex(-Double(card.id))
 
             }
         }
@@ -99,11 +99,11 @@ struct GameView: View {
                height: GameConstants.undealtHeight,
                alignment: .center)
         .onTapGesture {
-                for (index, card) in (gameViewModel.dealMoreCards().enumerated()) {
-                    withAnimation(.easeInOut(duration: 1).delay(Double(Double(index) * 0.5))) {
-                            dealCard(card)
+                //for (index, card) in (gameViewModel.dealMoreCards().enumerated()) {
+                    withAnimation(.easeInOut(duration: 1).delay(0)) {
+                            dealCard(gameViewModel.dealMoreCards()[0])
                         }
-                }
+                // }
         }
     }
     
