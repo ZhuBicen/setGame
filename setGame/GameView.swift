@@ -21,6 +21,7 @@ struct GameView: View {
         VStack {
             ZStack(alignment: .bottom) {
                 gameBody
+                // newGameBody
                 HStack {
                     discardPileBody
                     deckBody
@@ -54,8 +55,8 @@ struct GameView: View {
                     .matchedGeometryEffect(id: item.id, in: discardNamespace)
                     .padding(3)
                     .contentShape(Rectangle())
+                    .transition(AnyTransition.asymmetric(insertion: .scale, removal: .identity))
                     .zIndex(Double(item.id))
-                    .transition(AnyTransition.asymmetric(insertion: .identity, removal: .identity))
                     .onTapGesture {
                         withAnimation {
                             gameViewModel.selectCard(card: item)
@@ -81,6 +82,22 @@ struct GameView: View {
         }
     }
     
+    var newGameBody : some View {
+        VStack {
+            ForEach(gameViewModel.getDealtCards().reversed()) { card in
+                 if isCardDealt(card) {
+                    CardView(card: card, isFaceUp: true, isInSet: false, isSelected: false)
+                        .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                        .transition(AnyTransition.asymmetric(insertion: .identity, removal: .identity))
+                        .zIndex(Double(card.id))
+                } else {
+                    Color.clear
+                }
+                
+            }
+        }
+    }
+    
     struct GameConstants {
         static let undealtHeight : Double = 120
         static let undealWidth : Double = 120 * (2/3)
@@ -88,11 +105,11 @@ struct GameView: View {
     
     var deckBody : some View {
         ZStack {
-            ForEach(gameViewModel.getDeckCards()) { card in
+            ForEach(gameViewModel.getDeckCards().reversed()) { card in
                 CardView(card: card, isFaceUp: false, isInSet: false, isSelected: false)
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
-                    .zIndex(Double(card.id))
                     .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity ))
+                    .zIndex(-Double(card.id))
 
             }
         }
@@ -100,11 +117,15 @@ struct GameView: View {
                height: GameConstants.undealtHeight,
                alignment: .center)
         .onTapGesture {
-                for card in (gameViewModel.dealMoreCards()) {
-                    withAnimation(.easeInOut(duration: 1).delay(0)) {
-                        dealCard(card)
-                    }
+            var cards : [GameViewModel.Card] = []
+            withAnimation(.linear(duration: 1)){
+                 cards = gameViewModel.dealMoreCards()
+            }
+            for card in (cards) {
+                withAnimation(.linear(duration: 1).delay(0)) {
+                    dealCard(card)
                 }
+            }
         }
     }
     

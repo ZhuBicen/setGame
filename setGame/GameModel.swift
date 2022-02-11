@@ -66,7 +66,10 @@ struct GameModel {
                 }
             }
         }
-       deckCards = cards// .shuffled()
+        deckCards = cards.shuffled()
+        for (index, _ ) in deckCards.enumerated() {
+            deckCards[index].id = index
+        }
     }
     
     mutating func dealCards() {
@@ -78,10 +81,9 @@ struct GameModel {
     
     mutating func dealMoreCards() -> [Card] {
         var newDealtCards : [Card] = []
-        for _ in 0..<1 {
+        for _ in 0..<3 {
             let card = dealOneCard()
             if card != nil {
-                print("Deal card .\(card!.id)")
                 dealtCards.append(card!)
                 newDealtCards.append(card!)
             }
@@ -112,8 +114,8 @@ struct GameModel {
     
     mutating func dealOneCard() -> Card? {
         if deckCards.count != 0 {
-            let card = deckCards.last
-            deckCards.removeLast()
+            let card = deckCards.first
+            deckCards.removeFirst()
             return card
         }
         return nil
