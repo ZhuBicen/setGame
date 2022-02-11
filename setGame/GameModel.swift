@@ -35,6 +35,7 @@ struct GameModel {
         var fill  : CardFillStyle
         var color : Color
         var shape : CardGeometry
+        var angle : Double
         
         init(_ id: Int, _ number : CardNumber, _ fillStyle : CardFillStyle, _ color : Color, _ shape : CardGeometry) {
             self.id = id
@@ -42,6 +43,7 @@ struct GameModel {
             self.fill = fillStyle
             self.color = color
             self.shape = shape
+            self.angle = Double.random(in : 0...360)
         }
     }
     

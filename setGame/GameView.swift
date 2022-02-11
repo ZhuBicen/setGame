@@ -110,6 +110,7 @@ struct GameView: View {
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity ))
                     .zIndex(-Double(card.id))
+                    .rotationEffect(Angle.degrees(card.angle))
 
             }
         }
