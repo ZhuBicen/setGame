@@ -50,7 +50,10 @@ struct GameView: View {
     var gameBody : some View {
         AspectVGrid(items: gameViewModel.getDealtCards(), aspectRatio: 55/87) { item in
             if isCardDealt(item) {
-                CardView(card: item, isFaceUp: true, isInSet: gameViewModel.isCardInSet(card: item), isSelected: gameViewModel.isCardSelected(card: item))
+                CardView(card: item)
+                    .cardify(id: item.id, isFaceUp: true,
+                             isInSet: gameViewModel.isCardInSet(card: item),
+                             isSelected: gameViewModel.isCardSelected(card: item))
                     .matchedGeometryEffect(id: item.id, in: dealingNamespace)
                     .matchedGeometryEffect(id: item.id, in: discardNamespace)
                     .padding(3)
@@ -86,7 +89,8 @@ struct GameView: View {
         VStack {
             ForEach(gameViewModel.getDealtCards().reversed()) { card in
                  if isCardDealt(card) {
-                    CardView(card: card, isFaceUp: true, isInSet: false, isSelected: false)
+                     CardView(card: card)
+                         .cardify(id: card.id, isFaceUp: true, isInSet: false, isSelected: false)
                         .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                         .transition(AnyTransition.asymmetric(insertion: .identity, removal: .identity))
                         .zIndex(Double(card.id))
@@ -106,7 +110,8 @@ struct GameView: View {
     var deckBody : some View {
         ZStack {
             ForEach(gameViewModel.getDeckCards().reversed()) { card in
-                CardView(card: card, isFaceUp: false, isInSet: false, isSelected: false)
+                CardView(card: card)
+                    .cardify(id: card.id, isFaceUp: false, isInSet: false, isSelected: false)
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity ))
                     .zIndex(-Double(card.id))
@@ -133,7 +138,8 @@ struct GameView: View {
     var discardPileBody : some View {
         ZStack {
             ForEach(gameViewModel.getDiscardedCards()) { card in
-                CardView(card: card, isFaceUp: true, isInSet: false, isSelected: false)
+                CardView(card: card)
+                    .cardify(id: card.id, isFaceUp: true, isInSet: false, isSelected: false)
                     .matchedGeometryEffect(id: card.id, in: discardNamespace)
                     // .zIndex(Double(card.id))
                     .transition(AnyTransition.asymmetric(insertion: .identity, removal: .identity ))
